@@ -17,17 +17,19 @@ const handleListen = () => console.log(`Listening on http://localhost:3000`);
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
+const sockets = [];
+
 // socket으로 FE와 real-time으로 소통할 수 있다
 // server.js의 socket은 연결된 브라우저를 뜻한다
 wss.on("connection", (socket) => {
+  sockets.push(socket);
   console.log("Connected to Browser 🍀");
   socket.on("close", () => {
     console.log("Disconnected from the Browser ✂️");
   });
   socket.on("message", (message) => {
-    console.log(message.toString("utf8"));
+    sockets.forEach((aSocket) => aSocket.send(message));
   });
-  socket.send("hello!");
 });
 
 server.listen(3000, handleListen);
