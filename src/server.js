@@ -28,6 +28,7 @@ wss.on("connection", (socket) => {
     console.log("Disconnected from the Browser ✂️");
   });
   socket.on("message", (message) => {
+    message = message.toString("utf-8");
     sockets.forEach((aSocket) => aSocket.send(message));
   });
 });

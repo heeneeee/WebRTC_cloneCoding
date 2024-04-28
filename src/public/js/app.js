@@ -1,21 +1,24 @@
 const messageList = document.querySelector("ul");
-const messageForm = document.querySelector("form");
+const messageForm = document.querySelector("#message");
+const nickForm = document.querySelector("#nick");
 
 // app.js의 socket은 서버로의 연결을 뜻한다
 const socket = new WebSocket(`ws://${window.location.host}`);
+
+function makeMessage(type, payload) {
+  const msg = { type, payload };
+  // object를 string으로
+  return JSON.stringify(msg);
+}
 
 socket.addEventListener("open", () => {
   console.log("Connected to Server 🍀");
 });
 
-// event.data를 보면 Blob이라는 instance를 return하고 있고 그 안에 prototype을 보면
-// text라는 method가 있는데 이 method가 promise를 return하고 있습니다
-// 따라서 비동기처리 (async/await)를 해주시면 됩니다
-// socket.addEventListener("message", (message) => {
-//   console.log("New message:", message);
-// });
-socket.addEventListener("message", async (event) => {
-  console.log("New message:", await event.data.text());
+socket.addEventListener("message", (message) => {
+  const li = document.createElement("li");
+  li.innerHTML = message.data;
+  messageList.append(li);
 });
 
 socket.addEventListener("close", () => {
@@ -32,8 +35,16 @@ function handleSubmit(event) {
   const input = messageForm.querySelector("input");
   //   console.log(input.value);
   // BE로 input.value를 보내주고 있음
-  socket.send(input.value);
+  // type => new_message, payload => input.value
+  socket.send(makeMessage("new_message", input.value));
   input.value = "";
 }
 
+function handleNickSubmit(event) {
+  event.preventDefault();
+  const input = nickForm.querySelector("input");
+  socket.send(makeMessage("nickname", input.value));
+}
+
 messageForm.addEventListener("submit", handleSubmit);
+nickForm.addEventListener("submit", handleNickSubmit);
