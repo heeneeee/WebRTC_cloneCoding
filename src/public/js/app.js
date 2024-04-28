@@ -24,12 +24,6 @@ socket.addEventListener("message", (message) => {
 socket.addEventListener("close", () => {
   console.log("Disconnected from Server ✂️");
 });
-
-// 10초 뒤에 작동
-// setTimeout(() => {
-//   socket.send("hello from the Browser");
-// }, 10000);
-
 function handleSubmit(event) {
   event.preventDefault();
   const input = messageForm.querySelector("input");
@@ -44,6 +38,7 @@ function handleNickSubmit(event) {
   event.preventDefault();
   const input = nickForm.querySelector("input");
   socket.send(makeMessage("nickname", input.value));
+  input.value = "";
 }
 
 messageForm.addEventListener("submit", handleSubmit);
