@@ -31,6 +31,9 @@ function handleSubmit(event) {
   // BE로 input.value를 보내주고 있음
   // type => new_message, payload => input.value
   socket.send(makeMessage("new_message", input.value));
+  const li = document.createElement("li");
+  li.innerHTML = `You: ${input.value}`;
+  messageList.append(li);
   input.value = "";
 }
 
