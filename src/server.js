@@ -17,6 +17,8 @@ const handleListen = () => console.log(`Listening on http://localhost:3000`);
 // 동일한 포트에서 두 개 다 처리 가능
 const httpServer = http.createServer(app);
 const wsServer = SocketIO(httpServer);
+
+wsServer.on("connection", (socket) => console.log(socket));
 // const wss = new WebSocket.Server({ server });
 // const sockets = [];
 
@@ -45,4 +47,4 @@ const wsServer = SocketIO(httpServer);
 //   });
 // });
 
-server.listen(3000, handleListen);
+httpServer.listen(3000, handleListen);
